@@ -17,13 +17,26 @@ module.exports = function (angular, undefuned) {
   *
   *
   */
-  /* global -ngSocketIOModule */
+
 
   /**
 	* Include socket.io client library
   **/
   var SocketClient = require('socket.io-client');
+
+    /**
+  * @ngdoc provider
+  * @name SocketIOProvider
+  * @function
+  *
+  * @description
+  *
+  * Used for send events on socket.io server and listen server events.
+  */
   var SocketIOProvider = function () {
+    /*
+    * Private variables and methods
+    */
     var _ = {
     	socket: SocketClient,
     	params: {
@@ -68,10 +81,34 @@ module.exports = function (angular, undefuned) {
         console.log('"cb" is not a function, result: ', result);
       }
     };  	
+    /* Public methods */
 		return {
+      /**
+      * @ngdoc method
+      * @name SocketIOProvider#configure
+      *
+      * @description
+      * Sets socket.io server params
+      *   angular.module('myApp')
+      *   .config(function(socketIOProvider) {
+      *     var api = {
+      *       protocol: 'http',
+      *       host: 'localhost',
+      *       port: 3000,
+      *       path: '/basepath',
+      *       sessionInit: '/auth/session'
+      *     }
+      *     socketIOProvider.configure(api);
+      *   });
+      *
+      * @param {Object} params Mapping information about connection params.
+      * @returns {Object} self
+      */
 			configure: function (params) {
 				angular.extend(_.params, params);
+        return this;
 			},
+      
 	    $get: ['$http', '$rootScope', function($http, $rootScope) {
 	    	_.$http = $http;
 	      var p = {
@@ -80,7 +117,7 @@ module.exports = function (angular, undefuned) {
 	            if(connected) {
 	              _.io.on(event, function (data) {
 	                _.cb(cb, data, args);
-	                $rootScope.$apply();
+	                if (!rootScope.$$phase) $rootScope.$apply();
 	              });
 	            } else {
 
@@ -101,6 +138,7 @@ module.exports = function (angular, undefuned) {
 
 	  };
 	}
-	SocketIOModule = angular.module('SocketIOModule', ['ng']).
+  /* SocketIOModule */
+	angular.module('SocketIOModule', ['ng']).
    	provider('socketIO', SocketIOProvider);
 }
