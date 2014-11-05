@@ -66,7 +66,7 @@ module.exports = function (angular, undefuned) {
 	              _.cb(cb, true);
 	            })
 	            .error(function(err) {
-	              _.cb(cb, false)
+	              _.cb(cb, false);
 	            });
 	        } else {
             _.io = _.socket.connect(_.socketUrl());
@@ -75,7 +75,7 @@ module.exports = function (angular, undefuned) {
         }
     	},
       cb: function (cb, result, args) {
-      	var args = args || [];
+      	if (!args) args = [];
         if (angular.isFunction(cb)) cb(result, (args[0]||undefined), (args[1]||undefined), (args[2]||undefined), (args[3]||undefined), (args[4]||undefined), (args[5]||undefined),
 	                  (args[6]||undefined), (args[7]||undefined), (args[8]||undefined), (args[9]||undefined));
         console.log('"cb" is not a function, result: ', result);
@@ -117,7 +117,7 @@ module.exports = function (angular, undefuned) {
 	            if(connected) {
 	              _.io.on(event, function (data) {
 	                _.cb(cb, data, args);
-	                if (!rootScope.$$phase) $rootScope.$apply();
+	                if (!$rootScope.$$phase) $rootScope.$apply();
 	              });
 	            } else {
 
@@ -137,8 +137,8 @@ module.exports = function (angular, undefuned) {
 	    }]
 
 	  };
-	}
+	};
   /* SocketIOModule */
 	angular.module('SocketIOModule', ['ng']).
    	provider('socketIO', SocketIOProvider);
-}
+};
