@@ -1,6 +1,6 @@
 {
   "name": "angular.io",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Angular provider for work with socket.io library.",
   "main": "index.js",
   "scripts": {
