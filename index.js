@@ -60,7 +60,7 @@ module.exports = function (angular, undefuned) {
             _.cb(cb, true);
         } else {
           if (_.sessionUrl()) {
-	          _.$http.get(_.sessionUrl())
+	          _.$http.get(_.sessionUrl(), {withCredentials: true})
 	            .success(function(data) {
 	              _.io = _.socket.connect(_.socketUrl());
 	              _.cb(cb, true);
