@@ -127,7 +127,10 @@ module.exports = function (angular, undefuned) {
 	        send: function (event, data, cb) {
 	          _.init(function (connected) {
 	            if (connected) { // если подключены, отправляем событие
-	              _.io.emit(event, data, cb);
+	              _.io.emit(event, data, function (data) {
+									if (cb) cb(data);
+									if (!$rootScope.$$phase) $rootScope.$apply();
+								});
 	            } else { // иначе ставим в очередь
 	            }
 	          });
